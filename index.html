@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>SlipLine Studio | Milestone Trend Analysis</title>
+<style>
+:root{--font:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,"SF Mono",monospace;--r:14px;--glabel:230px;--gend:64px}
+html[data-theme=dark]{--bg:#171a1d;--bar:rgba(23,26,29,.86);--panel:#1e2226;--panel2:#23282d;--line:#2e343c;--text:#f2f0e9;--muted:#9ba19e;--accent:#76bfae;--on-accent:#10231f;--red:#e0705c;--red-soft:rgba(224,112,92,.16);--amber:#f2a900;--amber-ink:#f2a900;--amber-soft:rgba(242,169,0,.16);--green:#76bfae;--green-soft:rgba(118,191,174,.16);--blue:#7fa7c9;--blue-soft:rgba(127,167,201,.16);--violet:#a78bfa;--grid:rgba(155,161,158,.05);--grid2:rgba(155,161,158,.14);--chip:rgba(155,161,158,.14);--hover:rgba(155,161,158,.07);--tip:#14171a;--shadow:0 12px 32px rgba(0,0,0,.35);--shadow-h:0 18px 40px rgba(0,0,0,.5)}
+html[data-theme=light]{--bg:#f2efe7;--bar:rgba(242,239,231,.92);--panel:#fbf9f4;--panel2:#eae5d9;--line:#c8c2b4;--text:#1b211f;--muted:#5e625c;--accent:#21675c;--on-accent:#ffffff;--red:#b94832;--red-soft:rgba(185,72,50,.10);--amber:#c87a00;--amber-ink:#855000;--amber-soft:rgba(200,122,0,.12);--green:#21675c;--green-soft:rgba(33,103,92,.10);--blue:#3e6a8c;--blue-soft:rgba(62,106,140,.10);--violet:#7c3aed;--grid:rgba(62,106,140,.07);--grid2:rgba(27,33,31,.10);--chip:rgba(27,33,31,.06);--hover:rgba(27,33,31,.04);--tip:#fbf9f4;--shadow:0 6px 18px rgba(27,33,31,.08);--shadow-h:0 12px 28px rgba(27,33,31,.16)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:14px/1.45 var(--font);color:var(--text);background:var(--bg);min-height:100vh}
+html[data-theme=light] body{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+button,select,input{font:inherit;color:inherit}
+.top{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid var(--line);background:var(--bar);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}
+.brand{display:flex;gap:12px;align-items:center;min-width:0}
+.brand b{font-size:17px;letter-spacing:.3px}
+.brand small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.logo{flex:none;width:34px;height:34px;border-radius:10px;background:conic-gradient(from 210deg,var(--accent),var(--violet),var(--red),var(--accent));position:relative}
+.logo::after{content:"";position:absolute;inset:7px;border-radius:5px;background:var(--panel);clip-path:polygon(0 100%,0 72%,38% 42%,60% 60%,100% 12%,100% 100%)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.btn{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:7px 12px;cursor:pointer;transition:border-color .15s,background .15s;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:transparent;font-weight:600}
+.btn.ghost{background:transparent}
+.btn.round{width:40px;height:40px;border-radius:50%;padding:0;font-size:15px}
+.btn:focus-visible,select:focus-visible,input:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sel{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted)}
+select{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 8px;max-width:300px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:7px 12px;cursor:pointer}
+.seg button.on{background:var(--accent);color:var(--on-accent);font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);min-width:0}
+.panel{transition:border-color .18s ease,box-shadow .18s ease}.panel.kpi{transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+.panel:hover{border-color:var(--accent);box-shadow:var(--shadow-h)}
+.panel.kpi:hover{border-left-color:var(--k);transform:translateY(-2px)}@media (prefers-reduced-motion:reduce){.panel,.panel.kpi{transition:none}.panel.kpi:hover{transform:none}}
+.scrub{display:grid;grid-template-columns:auto auto minmax(160px,1fr) auto auto;gap:14px;align-items:center;margin:16px 22px 0;padding:12px 16px}
+.track{position:relative;padding-bottom:16px}
+.track input{width:100%;accent-color:var(--accent);margin:0}
+.ticks{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;font:10px var(--mono);color:var(--muted);padding:0 2px}
+.now{min-width:120px}
+.now b{font:600 20px var(--mono);display:block}
+.now span{color:var(--muted);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:14px 22px 0}
+.kpi{padding:14px 16px;border-left:4px solid var(--k);position:relative;overflow:hidden}
+.kpi h3{margin:0;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.kpi .v{font:700 30px/1.15 var(--mono);margin-top:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.delta{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:99px;font:600 11px var(--mono);vertical-align:middle;background:var(--chip);color:var(--muted)}
+.delta.worse{background:var(--red-soft);color:var(--red)}
+.delta.better{background:var(--green-soft);color:var(--green)}
+.grid{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(300px,1fr);grid-template-areas:"mta resp" "mta dec" "gantt gantt";gap:14px;margin:14px 22px 18px}
+.mta{grid-area:mta}.resp{grid-area:resp}.dec{grid-area:dec}.gantt{grid-area:gantt}
+.ph{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px 4px}
+.ph h2{margin:0;font-size:15px}
+.ph .sub{color:var(--muted);font-size:12px;font-weight:400;margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{border:1px solid var(--line);background:transparent;border-radius:99px;padding:4px 10px;font-size:12px;cursor:pointer}
+.chip.on{background:var(--accent);border-color:transparent;color:var(--on-accent);font-weight:600}
+.chartwrap{position:relative;padding:4px 8px 0}
+#mta{width:100%;height:auto;display:block;user-select:none}
+.hint{margin:2px 16px 12px;color:var(--muted);font-size:12px}
+svg text{fill:var(--muted);font:11px var(--font)}
+.gridline{stroke:var(--grid2);stroke-width:1}
+.axisline{stroke:var(--line);stroke-width:1.2}
+.diag{stroke:var(--muted);stroke-dasharray:6 5;stroke-width:1.3;fill:none;opacity:.85}
+.nowline{stroke:var(--accent);stroke-width:1.2;stroke-dasharray:3 4;opacity:.8}
+.traj{cursor:pointer;transition:opacity .2s}
+.traj path.ln{fill:none;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;transition:stroke-width .2s}
+.traj path.hit{fill:none;stroke:transparent;stroke-width:12}
+.traj.crit path.ln{stroke-width:2.4}.traj line.tl{fill:none;stroke-width:1.5;stroke-linecap:round}.traj.crit line.tl{stroke-width:2.4}
+.traj circle{stroke:var(--panel);stroke-width:1.2}
+#mta.spot .traj{opacity:.13}
+#mta.spot .traj.hot{opacity:1}
+#mta.spot .traj.hot path.ln{stroke-width:3.8;filter:url(#slGlow)}#mta.spot .traj.hot line.tl{stroke-width:3.8}
+.badge text{font:700 10px var(--mono);fill:#fff}
+.tip{position:absolute;pointer-events:none;min-width:220px;max-width:300px;padding:10px 12px;border-radius:10px;background:var(--tip);border:1px solid var(--line);box-shadow:var(--shadow);font-size:12px;z-index:5}
+.tip b{display:block;font-size:13px;margin-bottom:4px}
+.tip .row{display:flex;justify-content:space-between;gap:12px;color:var(--muted)}
+.tip .row span:last-child{color:var(--text);font-family:var(--mono);text-align:right}
+.tip p{margin:6px 0 0;color:var(--muted)}
+.resp-body{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:center;padding:8px 16px 16px}
+.legend-list{display:grid;gap:9px}
+.lg{display:grid;grid-template-columns:12px 1fr auto;gap:2px 8px;align-items:center;font-size:12.5px}
+.lg i{width:12px;height:12px;border-radius:3px;background:var(--c)}
+.lg small{color:var(--muted);grid-column:2/4;font-size:11px}
+.lg b{font-family:var(--mono)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dec .wrap{padding:4px 6px 12px;overflow-x:auto}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--hover)}
+.rank{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--red-soft);color:var(--red);font:700 11px var(--mono)}
+.empty{padding:18px 16px;color:var(--muted);font-size:13px}
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font:600 10.5px var(--mono);letter-spacing:.3px;white-space:nowrap}
+.pill.CRITICAL_SLIP{background:var(--red-soft);color:var(--red)}
+.pill.AT_RISK{background:var(--amber-soft);color:var(--amber-ink)}
+.pill.ON_TRACK{background:var(--green-soft);color:var(--green)}
+.pill.COMPLETED{background:var(--blue-soft);color:var(--blue)}
+.fam{font:700 10px var(--mono);padding:1px 6px;border-radius:5px;border:1px solid currentColor}
+.fam.OWN{color:var(--blue)}.fam.CTR{color:var(--red)}.fam.EXT{color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:18px;height:8px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.legend i.d{width:10px;height:10px;border-radius:0;transform:rotate(45deg);background:transparent;border:2px solid var(--text)}
+.legend i.d.g{border-color:var(--green)}
+.legend i.o{width:10px;height:10px;border-radius:50%;background:var(--text)}
+.gbody{padding:6px 16px 16px}
+.gaxis{position:relative;height:22px;margin-left:var(--glabel);margin-right:var(--gend);border-bottom:1px solid var(--line)}
+.gaxis span{position:absolute;transform:translateX(-50%);font:10px var(--mono);color:var(--muted);top:3px;white-space:nowrap}
+.grow{display:grid;grid-template-columns:var(--glabel) 1fr;align-items:center;min-height:30px;border-bottom:1px dashed var(--line);cursor:pointer}
+.grow:hover,.grow.hot{background:var(--hover)}
+.glab{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}
+.glab b{font-family:var(--mono);margin-right:6px}
+.glane{position:relative;height:30px;margin-right:var(--gend)}
+.gnow{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed var(--accent);opacity:.75}
+.bar{position:absolute;top:11px;height:8px;border-radius:4px;transition:left .25s,width .25s}
+.bar.eot{background:var(--green)}
+.bar.net{background:var(--red)}
+.bar.early{background:var(--blue)}
+.mk{position:absolute;top:9px;width:12px;height:12px;margin-left:-6px;transform:rotate(45deg);border:2px solid var(--text);background:var(--panel);transition:left .25s}
+.mk.appr{border-color:var(--green)}
+.mk.fc{transform:none;border-radius:50%;background:var(--text);border-color:var(--panel);transition:none}
+.mk.fc.done{background:var(--blue)}
+.gval{position:absolute;top:7px;margin-left:10px;font:600 10.5px var(--mono);white-space:nowrap;transition:left .25s}@media (prefers-reduced-motion:reduce){.mk,.gval,.traj,.traj path.ln{transition:none}}
+.scrim{position:fixed;inset:0;background:rgba(2,6,23,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(500px,100vw);background:var(--panel);border-left:1px solid var(--line);box-shadow:-20px 0 40px rgba(0,0,0,.3);transform:translateX(104%);transition:transform .25s ease;z-index:31;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dh h3{margin:2px 0 0;font-size:16px}
+.dh small{color:var(--muted)}
+.db{overflow:auto;padding:14px 18px 24px;display:grid;gap:16px;align-content:start}
+.h4{margin:0 0 6px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tri div{padding:10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line)}
+.tri small{display:block;color:var(--muted);font-size:11px}
+.tri b{font:600 13px var(--mono)}
+.tri em{display:block;font:normal 11px var(--mono);color:var(--muted);margin-top:2px}
+.note{font-size:11.5px;color:var(--muted);margin:0}
+.mini{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.mini table{font-size:12px}
+.mini th,.mini td{padding:5px 8px}
+.mini tr.cur td{background:var(--hover);font-weight:600}
+/* File drop overlay and column-mapping UI intentionally removed. */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;padding:10px 16px;border-radius:10px;background:var(--tip);border:1px solid var(--line);box-shadow:var(--shadow);transition:.2s;z-index:50;font-size:13px;pointer-events:none;max-width:90vw}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:0 22px 22px;color:var(--muted);font-size:11.5px}
+.printonly{display:none}
+body.client .internal-only{display:none!important}
+body:not(.client) .client-only{display:none!important}
+@media (max-width:1100px){
+  .grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"mta" "resp" "dec" "gantt"}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .scrub{grid-template-columns:auto auto minmax(140px,1fr)}
+  :root{--glabel:160px}
+  .glane{height:auto;min-height:52px}
+  .gval{position:relative;display:block;top:auto;left:auto!important;margin:30px 0 0;white-space:normal;overflow-wrap:anywhere}
+}
+@media screen and (max-width:600px){
+  .top{padding:12px 14px}.tools,.sel{min-width:0;max-width:100%}
+  select{min-width:0;max-width:100%;width:100%}
+  .scrub{margin:14px 14px 0;grid-template-columns:40px minmax(0,1fr);gap:12px}
+  .scrub .track{grid-column:1/-1;grid-row:2;min-width:0}
+  .scrub .now,.scrub>.sel{grid-column:1/-1;min-width:0}
+  .kpis{margin:14px 14px 0}.grid{margin:14px}
+  .kpi .v{font-size:clamp(18px,5.5vw,30px);white-space:normal;overflow-wrap:anywhere}
+  .delta{display:table;margin:6px 0 0;white-space:normal;overflow-wrap:anywhere}
+  .resp-body{grid-template-columns:1fr;justify-items:center}.legend-list{width:100%;min-width:0}
+  .dec .wrap{overflow-x:auto}
+  .grow{grid-template-columns:minmax(0,1fr);gap:4px;padding:6px 0}
+  .glab{white-space:normal;overflow-wrap:anywhere}
+  :root{--gend:12px}
+  .glane{height:auto;min-height:52px}
+  .gval{position:relative;display:block;top:auto;left:auto!important;margin:30px 0 0;white-space:normal;overflow-wrap:anywhere}
+  .gaxis{margin-left:0}
+  .tri{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4 landscape;margin:9mm}
+  html[data-theme]{--bg:#fff;--bar:#fff;--panel:#fff;--panel2:#f8fafc;--line:#cbd5e1;--text:#0f172a;--muted:#475569;--accent:#0f766e;--on-accent:#fff;--red:#dc2626;--red-soft:rgba(220,38,38,.10);--amber:#b45309;--amber-ink:#b45309;--amber-soft:rgba(180,83,9,.10);--green:#059669;--green-soft:rgba(5,150,105,.10);--blue:#2563eb;--blue-soft:rgba(37,99,235,.10);--grid2:rgba(15,23,42,.12);--chip:rgba(15,23,42,.06);--hover:transparent;--tip:#fff;--shadow:none}
+  body{background:#fff!important;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .top,.scrub,.hint,.drawer,.scrim,.drop,.toast,dialog,.chips,#phaseSel,.noprint{display:none!important}
+  .printonly{display:block;margin:0 0 6px}
+  .printonly h1{margin:0;font-size:18px}
+  .printonly p{margin:2px 0 0;color:#475569}
+  .kpis,.grid{margin:8px 0}
+  .panel{break-inside:avoid;box-shadow:none}
+  .gantt{break-before:page}
+  .foot{padding:6px 0 0}
+}
+</style>
+</head>
+<body>
+
+<!-- SLIPLINE_SAMPLE_ONLY_V1 -->
+<section id="slipline-demo-banner" class="noprint" aria-label="Sample demo notice">
+  <div><strong>Sample data only</strong><span> · Explore built-in Demo A/B. File import and CSV export are not included.</span></div>
+  <a class="btn primary" href="https://slipline.gumroad.com/l/suite" target="_blank" rel="noopener noreferrer">Get SlipLine Suite →</a>
+  <small>CLIENT is a display view, not secure redaction. This demo does not verify payment.</small>
+</section>
+<style>
+#slipline-demo-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;padding:12px 22px;background:var(--panel);color:var(--text);border-bottom:1px solid var(--accent)}
+#slipline-demo-banner strong{color:var(--accent)}
+#slipline-demo-banner a{text-decoration:none;text-align:center}
+#slipline-demo-banner small{flex-basis:100%;color:var(--muted)}
+.demo-print-mark{display:none}
+@media(max-width:600px){#slipline-demo-banner{padding:12px 14px}#slipline-demo-banner a{width:100%;white-space:normal}}
+@media print{#slipline-demo-banner{display:none!important}.demo-print-mark{display:block!important;position:fixed;bottom:0;right:0;padding:3px 8px;border:2px solid #111;color:#111;background:#fff;font:bold 12px sans-serif}}
+</style>
+<div class="demo-print-mark">SAMPLE DATA / DEMO</div>
+
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true"></span><div><b>SlipLine Studio</b><small id="projName">Loading…</small></div></div>
+  <div class="tools">
+    <label class="sel"><span>Dataset</span><select id="demoSel">
+      <option value="A">Demo A · Harbour Exchange (Construction)</option>
+      <option value="B">Demo B · Cloud ERP &amp; Core Banking (IT/PMO)</option>
+    </select></label>
+    <div class="seg" role="group" aria-label="Audience view">
+      <button type="button" data-view="INTERNAL" class="on">Internal SteerCo</button>
+      <button type="button" data-view="CLIENT">Client-facing</button>
+    </div>
+    <button id="themeBtn" class="btn ghost" type="button">Paper skin</button>
+    <button id="printBtn" class="btn ghost" type="button">Print PDF</button>
+  </div>
+</header>
+<section class="printonly" id="printHead"></section>
+<section class="scrub panel" aria-label="Time-lapse controls">
+  <button id="playBtn" class="btn round" type="button" aria-label="Play time-lapse">&#9654;</button>
+  <button id="speedBtn" class="btn ghost" type="button" aria-label="Playback speed">1x</button>
+  <div class="track"><input id="tSlider" type="range" min="0" max="12" step="1" value="12" aria-label="Review period"><div id="ticks" class="ticks"></div></div>
+  <div class="now"><b id="tLabel">T12</b><span id="tDate"></span></div>
+  <label class="sel"><span>Compare base period</span><select id="baseSel"></select></label>
+</section>
+<section class="kpis" id="kpis" aria-live="polite"></section>
+<main class="grid">
+  <article class="panel mta">
+    <div class="ph"><h2>Milestone Trend Analysis<span class="sub" id="mtaSub"></span></h2>
+      <div class="chips" id="chips" role="group" aria-label="Trajectory filter"></div>
+      <select id="phaseSel" aria-label="Phase filter"></select>
+    </div>
+    <div class="chartwrap" id="mtaWrap"><svg id="mta" role="img" aria-label="Milestone trend analysis chart"></svg><div id="tip" class="tip" hidden></div></div>
+    <p class="hint">Hover a trajectory to spotlight it, click to pin it and open the inspector, press Esc to release. A line climbing away from the dashed Y = X reference is slipping; a line that meets it has finished.</p>
+  </article>
+  <article class="panel resp"><div class="ph"><h2>Delay responsibility<span class="sub" id="respSub"></span></h2></div><div id="resp"></div></article>
+  <article class="panel dec"><div class="ph"><h2>Top 3 open decisions<span class="sub">ranked by net slip</span></h2></div><div id="dec"></div></article>
+  <article class="panel gantt">
+    <div class="ph"><h2>Dual-baseline deviation<span class="sub" id="ganttSub"></span></h2>
+      <div class="legend"><span><i class="d"></i>Original baseline</span><span><i class="d g"></i>Approved EOT baseline</span><span><i style="background:var(--green)"></i>Excused EOT</span><span><i style="background:var(--red)"></i>Net slip</span><span><i style="background:var(--blue)"></i>Ahead</span><span><i class="o"></i>Current forecast</span></div>
+    </div>
+    <div class="gbody" id="gantt"></div>
+  </article>
+</main>
+<footer class="foot"><span id="srcNote"></span><span>Illustrative analysis. Validate contractual entitlement before relying on LD or EOT figures.</span></footer>
+<div id="scrim" class="scrim"></div>
+<aside id="drawer" class="drawer" aria-hidden="true" aria-labelledby="dTitle">
+  <div class="dh"><div><small id="dMeta"></small><h3 id="dTitle"></h3></div><button id="dClose" class="btn ghost" type="button" aria-label="Close inspector">&#10005;</button></div>
+  <div class="db" id="dBody"></div>
+</aside>
+<div id="toast" class="toast" role="status"></div>
+<script>
+(() => {
+"use strict";
+/* ---------- utilities: dates are integer UTC day numbers ---------- */
+const DAY = 864e5;
+const D = (y, m, d) => Date.UTC(y, m - 1, d) / DAY;
+const pad2 = n => String(n).padStart(2, "0");
+const iso = n => n == null ? "" : new Date(n * DAY).toISOString().slice(0, 10);
+const fmtDate = n => n == null ? "—" : new Date(n * DAY).toLocaleDateString("en-GB", {day: "2-digit", month: "short", year: "numeric", timeZone: "UTC"});
+const fmtMon = n => new Date(n * DAY).toLocaleDateString("en-GB", {month: "short", year: "2-digit", timeZone: "UTC"});
+const money = v => "$" + Math.round(v).toLocaleString("en-US");
+const signed = n => (n > 0 ? "+" : n < 0 ? "\u2212" : "\u00b1") + Math.abs(Math.round(n));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const $ = s => document.querySelector(s);
+const label = t => "T" + pad2(t);
+const PARTY = {OWN: "Client/Owner", CTR: "Contractor/Internal", EXT: "External/Force Majeure"};
+const FAMILY_OF_PARTY = {"Client/Owner": "OWN", "Contractor/Internal": "CTR", "External/Force Majeure": "EXT"};
+const FAMILY_COLOUR = {OWN: "var(--blue)", CTR: "var(--red)", EXT: "var(--amber)", "": "var(--muted)"};
+const EOT_FAMILIES = ["OWN", "EXT"];
+const tuple = ([code, category, party, excuse, desc]) => ({code, category, party, excuse, desc});
+
+function approvedBaseline(baseline, forecast, code) {
+  // Same rule as demo_dataset.approved_baseline: OWN/EXT earn 7 days (slip <= 14) or 14 days; CTR none.
+  const slip = forecast - baseline;
+  if (slip <= 0 || !EOT_FAMILIES.some(f => String(code).startsWith(f))) return baseline;
+  return baseline + (slip <= 14 ? 7 : 14);
+}
+
+/* ---------- Demo A: fixed embedded sample; no fallback generator ---------- */
+const INJECTED_A = {"key":"A","name":"Harbour Exchange Commercial Development","sector":"Construction · Commercial","source":"Build-injected from src/demo_dataset.py","reviewDates":["2026-01-01","2026-02-01","2026-03-01","2026-04-01","2026-05-01","2026-06-01","2026-07-01","2026-08-01","2026-09-01","2026-10-01","2026-11-01","2026-12-01","2027-01-01"],"steerco":"2027-01-01","ragTolerance":7,"reasons":[{"code":"OWN-01","category":"Owner","party":"Client/Owner","excuse":"Excusable & Compensable","desc":"Drawing approval overdue"},{"code":"OWN-02","category":"Owner","party":"Client/Owner","excuse":"Excusable & Compensable","desc":"RFI response overdue"},{"code":"OWN-03","category":"Owner","party":"Client/Owner","excuse":"Excusable & Compensable","desc":"Client scope change"},{"code":"CTR-01","category":"Contractor","party":"Contractor/Internal","excuse":"Non-Excusable","desc":"Labour shortage"},{"code":"CTR-02","category":"Contractor","party":"Contractor/Internal","excuse":"Non-Excusable","desc":"Quality rework"},{"code":"CTR-03","category":"Contractor","party":"Contractor/Internal","excuse":"Non-Excusable","desc":"Procurement delay"},{"code":"EXT-01","category":"External","party":"External/Force Majeure","excuse":"Excusable & Non-Compensable","desc":"Severe weather"},{"code":"EXT-02","category":"External","party":"External/Force Majeure","excuse":"Excusable & Non-Compensable","desc":"Authority approval"},{"code":"EXT-03","category":"External","party":"External/Force Majeure","excuse":"Excusable & Non-Compensable","desc":"External supply outage"}],"milestones":[{"id":"M01","phase":"Pre-Construction","name":"Design freeze","owner":"Design Manager","critical":true,"baseline":"2026-03-01","approved":"2026-03-01","forecast":"2026-03-01","actual":"2026-03-01","reason":"OWN-01","ldRate":2500,"action":"Sign off frozen design set and lock change control at next SteerCo","traj":["2026-03-01","2026-03-01","2026-03-01",null,null,null,null,null,null,null,null,null,null]},{"id":"M02","phase":"Pre-Construction","name":"Planning consent","owner":"Design Manager","critical":false,"baseline":"2026-03-25","approved":"2026-04-01","forecast":"2026-04-08","actual":"2026-04-08","reason":"OWN-02","ldRate":5000,"action":"Close outstanding planning RFIs in a joint client-planner workshop","traj":["2026-03-25","2026-03-26","2026-03-27","2026-04-01","2026-04-08",null,null,null,null,null,null,null,null]},{"id":"M03","phase":"Pre-Construction","name":"Site possession","owner":"Design Manager","critical":true,"baseline":"2026-04-18","approved":"2026-05-02","forecast":"2026-05-23","actual":"2026-05-23","reason":"OWN-03","ldRate":7500,"action":"Confirm revised site boundary and release possession certificate","traj":["2026-04-18","2026-04-21","2026-04-24","2026-04-27","2026-05-01","2026-05-23",null,null,null,null,null,null,null]},{"id":"M04","phase":"Pre-Construction","name":"Enabling works","owner":"Design Manager","critical":true,"baseline":"2026-05-12","approved":"2026-05-12","forecast":"2026-07-07","actual":"2026-07-07","reason":"CTR-01","ldRate":10000,"action":"Mobilise second enabling crew and add Saturday shifts","traj":["2026-05-12","2026-05-12","2026-05-12","2026-05-12","2026-05-12","2026-06-01","2026-07-01","2026-07-07",null,null,null,null,null]},{"id":"M05","phase":"Substructure","name":"Piling completion","owner":"Site Manager","critical":false,"baseline":"2026-06-05","approved":"2026-06-05","forecast":"2026-06-05","actual":"2026-06-05","reason":"CTR-02","ldRate":2500,"action":"Witness pile integrity retests and release the remaining rig","traj":["2026-06-05","2026-06-05","2026-06-05","2026-06-05","2026-06-05","2026-06-05","2026-06-05",null,null,null,null,null,null]},{"id":"M06","phase":"Substructure","name":"Pile caps","owner":"Site Manager","critical":true,"baseline":"2026-06-29","approved":"2026-06-29","forecast":"2026-07-13","actual":"2026-07-13","reason":"CTR-03","ldRate":5000,"action":"Expedite pile cap rebar cages from an alternate fabricator","traj":["2026-06-29","2026-06-30","2026-07-01","2026-07-03","2026-07-04","2026-07-05","2026-07-06","2026-07-13",null,null,null,null,null]},{"id":"M07","phase":"Substructure","name":"Basement waterproofing","owner":"Site Manager","critical":true,"baseline":"2026-07-23","approved":"2026-08-06","forecast":"2026-08-27","actual":"2026-08-27","reason":"EXT-01","ldRate":7500,"action":"Install temporary weather enclosure over basement membrane","traj":["2026-07-23","2026-07-26","2026-07-29","2026-08-01","2026-08-04","2026-08-07","2026-08-10","2026-08-12","2026-08-27",null,null,null,null]},{"id":"M08","phase":"Substructure","name":"Ground slab","owner":"Site Manager","critical":false,"baseline":"2026-08-16","approved":"2026-08-30","forecast":"2026-10-11","actual":"2026-10-11","reason":"EXT-02","ldRate":10000,"action":"Book priority authority inspection slot for slab pour","traj":["2026-08-16","2026-08-16","2026-08-16","2026-08-16","2026-08-16","2026-08-16","2026-08-16","2026-08-16","2026-09-01","2026-10-01","2026-10-11",null,null]},{"id":"M09","phase":"Superstructure","name":"Level 1 frame","owner":"Structures Lead","critical":true,"baseline":"2026-09-09","approved":"2026-09-09","forecast":"2026-09-09","actual":"2026-09-09","reason":"EXT-03","ldRate":2500,"action":"Secure alternate batching plant for Level 1 frame pours","traj":["2026-09-09","2026-09-09","2026-09-09","2026-09-09","2026-09-09","2026-09-09","2026-09-09","2026-09-09","2026-09-09","2026-09-09",null,null,null]},{"id":"M10","phase":"Superstructure","name":"Level 3 frame","owner":"Structures Lead","critical":true,"baseline":"2026-10-03","approved":"2026-10-10","forecast":"2026-10-17","actual":"2026-10-17","reason":"OWN-01","ldRate":5000,"action":"Fast-track client approval of Level 3 transfer beam drawings","traj":["2026-10-03","2026-10-04","2026-10-05","2026-10-07","2026-10-08","2026-10-09","2026-10-10","2026-10-11","2026-10-12","2026-10-13","2026-10-17",null,null]},{"id":"M11","phase":"Superstructure","name":"Roof structure","owner":"Structures Lead","critical":false,"baseline":"2026-10-27","approved":"2026-11-10","forecast":"2026-12-01","actual":"2026-12-01","reason":"OWN-02","ldRate":7500,"action":"Resolve roof steel connection RFIs on a 48-hour turnaround","traj":["2026-10-27","2026-10-30","2026-11-02","2026-11-05","2026-11-08","2026-11-11","2026-11-14","2026-11-16","2026-11-19","2026-11-22","2026-12-01","2026-12-01",null]},{"id":"M12","phase":"Superstructure","name":"Structural inspection","owner":"Structures Lead","critical":true,"baseline":"2026-11-20","approved":"2026-12-04","forecast":"2027-01-15","actual":null,"reason":"OWN-03","ldRate":10000,"action":"Freeze client plant-room scope and re-plan structural inspection","traj":["2026-11-20","2026-11-20","2026-11-20","2026-11-20","2026-11-20","2026-11-20","2026-11-20","2026-11-20","2026-11-20","2026-12-04","2026-12-18","2027-01-01","2027-01-15"]},{"id":"M13","phase":"MEP & Facade","name":"Facade watertight","owner":"MEP Lead","critical":true,"baseline":"2026-12-14","approved":"2026-12-14","forecast":"2026-12-14","actual":"2026-12-14","reason":"CTR-01","ldRate":2500,"action":"Add facade installer gang and double-shift panel lifts","traj":["2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14","2026-12-14"]},{"id":"M14","phase":"MEP & Facade","name":"Main power energisation","owner":"MEP Lead","critical":false,"baseline":"2027-01-07","approved":"2027-01-07","forecast":"2027-01-21","actual":null,"reason":"CTR-02","ldRate":5000,"action":"Retest HV terminations and re-book utility energisation","traj":["2027-01-07","2027-01-08","2027-01-09","2027-01-11","2027-01-12","2027-01-13","2027-01-14","2027-01-15","2027-01-16","2027-01-17","2027-01-21","2027-01-21","2027-01-21"]},{"id":"M15","phase":"MEP & Facade","name":"MEP first fix","owner":"MEP Lead","critical":true,"baseline":"2027-01-31","approved":"2027-01-31","forecast":"2027-03-07","actual":null,"reason":"CTR-03","ldRate":7500,"action":"Release switchgear order to alternate supplier with LD back-to-back","traj":["2027-01-31","2027-02-03","2027-02-06","2027-02-09","2027-02-12","2027-02-15","2027-02-18","2027-02-20","2027-02-23","2027-02-26","2027-03-07","2027-03-07","2027-03-07"]},{"id":"M16","phase":"MEP & Facade","name":"MEP second fix","owner":"MEP Lead","critical":true,"baseline":"2027-02-24","approved":"2027-03-10","forecast":"2027-04-21","actual":null,"reason":"EXT-01","ldRate":10000,"action":"Resequence rooftop plant lifts into low-wind windows","traj":["2027-02-24","2027-02-24","2027-02-24","2027-02-24","2027-02-24","2027-02-24","2027-02-24","2027-02-24","2027-02-24","2027-03-10","2027-03-24","2027-04-07","2027-04-21"]},{"id":"M17","phase":"Commissioning & Handover","name":"Integrated systems testing","owner":"Commissioning Lead","critical":false,"baseline":"2027-03-20","approved":"2027-03-20","forecast":"2027-03-20","actual":null,"reason":"EXT-02","ldRate":2500,"action":"Agree phased IST witness schedule with authority inspectors","traj":["2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20","2027-03-20"]},{"id":"M18","phase":"Commissioning & Handover","name":"Fire authority approval","owner":"Commissioning Lead","critical":true,"baseline":"2027-04-13","approved":"2027-04-20","forecast":"2027-04-27","actual":null,"reason":"EXT-03","ldRate":5000,"action":"Source backup fire-alarm panels and pre-submit approval pack","traj":["2027-04-13","2027-04-14","2027-04-15","2027-04-17","2027-04-18","2027-04-19","2027-04-20","2027-04-21","2027-04-22","2027-04-23","2027-04-27","2027-04-27","2027-04-27"]},{"id":"M19","phase":"Commissioning & Handover","name":"Practical completion","owner":"Commissioning Lead","critical":true,"baseline":"2027-05-07","approved":"2027-05-21","forecast":"2027-06-11","actual":null,"reason":"OWN-01","ldRate":7500,"action":"Escalate overdue fit-out drawing approvals to client sponsor","traj":["2027-05-07","2027-05-10","2027-05-13","2027-05-16","2027-05-19","2027-05-22","2027-05-25","2027-05-27","2027-05-30","2027-06-02","2027-06-11","2027-06-11","2027-06-11"]},{"id":"M20","phase":"Commissioning & Handover","name":"Client handover","owner":"Commissioning Lead","critical":false,"baseline":"2027-05-31","approved":"2027-06-14","forecast":"2027-07-26","actual":null,"reason":"OWN-02","ldRate":10000,"action":"Run joint handover RFI clinic and freeze O&M documentation","traj":["2027-05-31","2027-05-31","2027-05-31","2027-05-31","2027-05-31","2027-05-31","2027-05-31","2027-05-31","2027-05-31","2027-06-14","2027-06-28","2027-07-12","2027-07-26"]}],"delays":[{"id":"D01","ms":"M04","date":"2026-05-01","reason":"CTR-01","summary":"Enabling works crew shortfall","days":3,"action":"Mobilise second enabling crew and add Saturday shifts","status":"Closed","owner":"Design Manager"},{"id":"D02","ms":"M07","date":"2026-05-21","reason":"EXT-01","summary":"Basement waterproofing retest required","days":4,"action":"Install temporary weather enclosure over basement membrane","status":"Closed","owner":"Site Manager"},{"id":"D03","ms":"M06","date":"2026-06-10","reason":"CTR-03","summary":"Pile cap rebar delivery deferred","days":5,"action":"Expedite pile cap rebar cages from an alternate fabricator","status":"Closed","owner":"Site Manager"},{"id":"D04","ms":"M08","date":"2026-06-30","reason":"EXT-02","summary":"Slab pour inspection rescheduled","days":6,"action":"Book priority authority inspection slot for slab pour","status":"Closed","owner":"Site Manager"},{"id":"D05","ms":"M10","date":"2026-07-20","reason":"OWN-01","summary":"Late Level 3 transfer beam drawings","days":7,"action":"Fast-track client approval of Level 3 transfer beam drawings","status":"Closed","owner":"Structures Lead"},{"id":"D06","ms":"M12","date":"2026-08-09","reason":"OWN-03","summary":"Client plant-room scope change","days":8,"action":"Freeze client plant-room scope and re-plan structural inspection","status":"Open","owner":"Structures Lead"},{"id":"D07","ms":"M15","date":"2026-08-29","reason":"CTR-03","summary":"Switchgear delivery deferred","days":9,"action":"Release switchgear order to alternate supplier with LD back-to-back","status":"Open","owner":"MEP Lead"},{"id":"D08","ms":"M16","date":"2026-09-18","reason":"EXT-01","summary":"High winds stopped rooftop crane lifts","days":10,"action":"Resequence rooftop plant lifts into low-wind windows","status":"Open","owner":"MEP Lead"},{"id":"D09","ms":"M19","date":"2026-10-08","reason":"OWN-01","summary":"Fit-out drawing approval overdue","days":11,"action":"Escalate overdue fit-out drawing approvals to client sponsor","status":"Open","owner":"Commissioning Lead"},{"id":"D10","ms":"M20","date":"2026-10-28","reason":"OWN-02","summary":"Handover documentation RFI overdue","days":12,"action":"Run joint handover RFI clinic and freeze O&M documentation","status":"Open","owner":"Commissioning Lead"}]};
+
+
+/* ---------- Demo B: enterprise IT / PMO programme, monthly reviews Feb 2026 .. Feb 2027 ---------- */
+function generateDemoB() {
+  const review = [];
+  for (let i = 0; i < 13; i++) { const m0 = 1 + i; review.push(D(2026 + Math.floor(m0 / 12), (m0 % 12) + 1, 1)); }
+  const steerco = review[12];
+  const REASONS = [
+    ["OWN-01", "Owner", "Client/Owner", "Excusable & Compensable", "Business sign-off overdue"],
+    ["OWN-02", "Owner", "Client/Owner", "Excusable & Compensable", "Late change request"],
+    ["OWN-03", "Owner", "Client/Owner", "Excusable & Compensable", "Data owner unavailable"],
+    ["CTR-01", "Vendor", "Contractor/Internal", "Non-Excusable", "SI resource shortfall"],
+    ["CTR-02", "Vendor", "Contractor/Internal", "Non-Excusable", "Defect backlog above exit criteria"],
+    ["CTR-03", "Vendor", "Contractor/Internal", "Non-Excusable", "Environment provisioning late"],
+    ["EXT-01", "External", "External/Force Majeure", "Excusable & Non-Compensable", "Regulator review"],
+    ["EXT-02", "External", "External/Force Majeure", "Excusable & Non-Compensable", "Third-party cut-over window"],
+    ["EXT-03", "External", "External/Force Majeure", "Excusable & Non-Compensable", "Cloud region capacity incident"]];
+  // [id, phase, name, owner, critical, baseline, reason, LD/day, recovery action, [[period, slip days]...], completed]
+  const SPEC = [
+    ["B01", "Mobilise", "Programme charter & SI contract signed", "PMO Lead", true, D(2026, 3, 16), "OWN-01", 3000, "Hold weekly sponsor checkpoint", [], true],
+    ["B02", "Design", "Target operating model sign-off", "Business Architect", true, D(2026, 4, 20), "OWN-01", 4000, "Escalate TOM sign-off to executive sponsor", [[1, 10], [2, 7]], true],
+    ["B03", "Design", "Core banking data model freeze", "Data Lead", false, D(2026, 5, 18), "OWN-03", 3000, "Nominate deputy data owners per domain", [[2, 7]], true],
+    ["B04", "Build", "Cloud landing zone & environments ready", "Cloud Platform Lead", true, D(2026, 6, 15), "CTR-03", 6000, "Run security baseline remediation sprint", [[3, 14], [4, 7]], true],
+    ["B05", "Build", "ERP configuration sprints 1-4 complete", "SI Delivery Lead", true, D(2026, 7, 20), "CTR-01", 8000, "Enforce SI staffing plan with named backfills", [[4, 7], [5, 7], [6, 7]], true],
+    ["B06", "Build", "Payments & SWIFT interface build", "Integration Lead", true, D(2026, 8, 24), "EXT-02", 6000, "Book fallback SWIFT test window", [[5, 14]], true],
+    ["B07", "Test", "System integration testing exit", "QA Lead", true, D(2026, 10, 26), "CTR-02", 10000, "Daily defect triage with SI and product owners", [[6, 7], [7, 10], [8, 7]], true],
+    ["B08", "Test", "Data migration dress rehearsal 2", "Data Lead", false, D(2026, 11, 23), "CTR-02", 5000, "Automate reconciliation scripts before DR3", [[9, 7], [10, 7]], true],
+    ["B09", "Test", "User acceptance testing sign-off", "Business Change Lead", true, D(2027, 1, 11), "OWN-02", 9000, "Freeze scope: defer change request CR-114 to release 2", [[9, 7], [10, 7], [11, 7], [12, 7]], false],
+    ["B10", "Cut-over", "Regulator go-live approval", "Compliance Lead", true, D(2027, 2, 15), "EXT-01", 12000, "Submit DR evidence pack and request pre-approval meeting", [[7, 21], [11, 14]], false],
+    ["B11", "Cut-over", "Production cut-over weekend", "Cut-over Manager", true, D(2027, 3, 1), "CTR-01", 15000, "Approve dedicated cut-over squad and third rehearsal", [[6, 7], [9, 7], [10, 7], [11, 7], [12, 7]], false],
+    ["B12", "Hypercare", "Hypercare exit & legacy decommission", "Service Owner", false, D(2027, 4, 12), "CTR-03", 4000, "Pre-order decommission change slots", [[10, 5]], false]];
+  const milestones = SPEC.map(([id, phase, name, owner, critical, baseline, reason, ldRate, action, slips, done]) => {
+    const forecast = baseline + slips.reduce((a, [, d]) => a + d, 0);
+    const actual = done ? forecast : null;
+    let closed = false;
+    const traj = review.map((rv, p) => {
+      if (closed) return null;
+      if (actual != null && rv >= actual) { closed = true; return actual; }
+      return Math.max(baseline + slips.filter(([q]) => q <= p).reduce((a, [, d]) => a + d, 0), rv);
+    });
+    if (actual == null) traj[traj.length - 1] = forecast;
+    return {id, phase, name, owner, critical, baseline, approved: approvedBaseline(baseline, forecast, reason),
+      forecast, actual, reason, ldRate, action, traj};
+  });
+  const delays = [
+    ["DL01", "B02", D(2026, 3, 5), "OWN-01", "TOM workshops postponed by business sponsor", 10, "Closed", "Business Architect"],
+    ["DL02", "B04", D(2026, 5, 4), "CTR-03", "Landing zone security baseline failed review", 14, "Closed", "Cloud Platform Lead"],
+    ["DL03", "B05", D(2026, 6, 3), "CTR-01", "SI configuration team below planned FTE", 7, "Closed", "SI Delivery Lead"],
+    ["DL04", "B07", D(2026, 9, 2), "CTR-02", "SIT defect backlog above exit criteria", 10, "Closed", "QA Lead"],
+    ["DL05", "B10", D(2026, 9, 8), "EXT-01", "Central bank requested additional DR evidence", 21, "Open", "Compliance Lead"],
+    ["DL06", "B09", D(2026, 11, 3), "OWN-02", "Late change request on loan origination flow", 7, "Open", "Business Change Lead"],
+    ["DL07", "B11", D(2026, 11, 4), "CTR-01", "Cut-over rehearsal failed on reconciliation", 7, "Open", "Cut-over Manager"],
+  ].map(([id, ms, date, reason, summary, days, status, owner]) => ({id, ms, date, reason, summary, days,
+    action: milestones.find(m => m.id === ms).action, status, owner}));
+  return {key: "B", name: "Global Cloud ERP & Core Banking Migration", sector: "Enterprise IT · PMO",
+    source: "Built-in IT/PMO demo", reviewDates: review, steerco, ragTolerance: 7,
+    reasons: REASONS.map(tuple), milestones, delays};
+}
+
+/* ---------- normalise built-in sample dates into the shared rendering shape ---------- */
+function toDay(v) {
+  if (v == null || v === "") return null;
+  if (typeof v === "number" && Number.isFinite(v)) return Math.round(v);
+  if (v instanceof Date) return Math.round(v.getTime() / DAY);
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(String(v).trim());
+  return m ? D(+m[1], +m[2], +m[3]) : null;
+}
+
+function hydrate(raw) {
+  const reviewDates = raw.reviewDates.map(toDay);
+  const reasons = (raw.reasons || []).map(r => ({...r}));
+  const reasonMap = Object.fromEntries(reasons.map(r => [r.code, r]));
+  const milestones = raw.milestones.map((m, idx) => {
+    const baseline = toDay(m.baseline);
+    const reason = String(m.reason || "").trim();
+    const family = ((reason.match(/^(OWN|CTR|EXT)/i) || [])[1] || FAMILY_OF_PARTY[reasonMap[reason]?.party] || "").toUpperCase();
+    return {
+      idx, id: String(m.id), phase: m.phase || "Unphased", name: m.name || String(m.id), owner: m.owner || "",
+      critical: !!m.critical, baseline, approved: toDay(m.approved) ?? baseline, forecast: toDay(m.forecast),
+      actual: toDay(m.actual), reason, family, party: reasonMap[reason]?.party || PARTY[family] || "Unassigned",
+      ldRate: Number(m.ldRate) || 0, action: m.action || "",
+      traj: reviewDates.map((_, t) => toDay(m.traj ? m.traj[t] : null)),
+    };
+  });
+  return {
+    key: raw.key || "A", name: raw.name || "Sample programme", sector: raw.sector || "",
+    source: raw.source || "", reviewDates, steerco: toDay(raw.steerco) ?? reviewDates[reviewDates.length - 1],
+    ragTolerance: Number(raw.ragTolerance ?? 7), reasons, reasonMap, milestones,
+    delays: (raw.delays || []).map(d => ({...d, date: toDay(d.date), days: Number(d.days) || 0})),
+    phases: [...new Set(milestones.map(m => m.phase))],
+  };
+}
+
+/* ---------- engine: same formulas as Milestone_Tracker G/I/K/O and MTA_Snapshots streaks ---------- */
+function stateAt(ds, m, t) {
+  // G: latest non-blank snapshot up to period t; no snapshots at all falls back to the stated forecast.
+  let f = null;
+  for (let p = t; p >= 0; p--) if (m.traj[p] != null) { f = m.traj[p]; break; }
+  if (f == null) f = m.traj.some(v => v != null) ? m.baseline : (m.forecast ?? m.baseline);
+  const done = m.actual != null && m.actual <= ds.reviewDates[t];
+  return {forecast: f, done, base: m.approved, net: f - m.approved, gross: f - m.baseline};
+}
+function ragOf(ds, m, s) {
+  if (s.done) return "COMPLETED";
+  if (s.net <= 0) return "ON_TRACK";
+  if (!m.critical && s.net <= ds.ragTolerance) return "AT_RISK";
+  return "CRITICAL_SLIP";  // critical path carries zero tolerance
+}
+function ldOf(m, s, rag) {
+  return rag === "CRITICAL_SLIP" && s.net > 0 && m.party === "Contractor/Internal" ? s.net * m.ldRate : 0;
+}
+function streakAt(m, t) {
+  let k = 0;
+  for (let p = 1; p <= t; p++) {
+    const a = m.traj[p], b = m.traj[p - 1];
+    k = (a == null || b == null) ? 0 : (a > b ? k + 1 : 0);
+  }
+  return k;
+}
+function snapshot(ds, t) {
+  const rows = ds.milestones.map(m => {
+    const s = stateAt(ds, m, t);
+    const rag = ragOf(ds, m, s);
+    return {m, s, rag, ld: ldOf(m, s, rag), streak: streakAt(m, t), chronic: streakAt(m, t) >= 3};
+  });
+  const sum = f => rows.reduce((a, r) => a + f(r), 0);
+  return {t, rows, k: {
+    tracked: rows.length,
+    critical: rows.filter(r => r.m.critical && r.s.net > 0 && !r.s.done).length,
+    chronic: rows.filter(r => r.chronic).length,
+    ld: sum(r => r.ld),
+    // Client view: days of slip caused by owner/external events (the contractor's EOT entitlement).
+    eot: sum(r => EOT_FAMILIES.includes(r.m.family) ? Math.max(r.s.gross, 0) : 0),
+    granted: sum(r => r.m.approved - r.m.baseline),
+  }};
+}
+function decisions(snap) {
+  // Workbook rank: score = net*1000 + row, LARGE() descending, so ties go to the later row.
+  return snap.rows.filter(r => !r.s.done && r.s.net > 0)
+    .sort((a, b) => b.s.net - a.s.net || b.m.idx - a.m.idx).slice(0, 3);
+}
+
+/* ---------- app state ---------- */
+const DEMOS = {A: () => hydrate(INJECTED_A), B: () => hydrate(generateDemoB())};
+const state = {ds: null, t: 12, base: "prev", view: "INTERNAL", theme: "dark", filter: "all", phase: "",
+  hover: null, pinned: null, playing: false, speed: 1, raf: 0, pbK: 0, pbLast: 0, tw: null, drawer: null};
+
+/* ======================= PART 2: rendering & interaction ======================= */
+const lastT = () => state.ds.reviewDates.length - 1;
+const baseIndex = () => state.base === "prev" ? Math.max(state.t - 1, 0) : Math.min(Number(state.base), lastT());
+const f1 = n => Math.round(n * 10) / 10;
+const byId = id => state.ds.milestones.find(m => m.id === id);
+const isClient = () => state.view === "CLIENT";
+const ragText = rag => rag.replace(/_/g, " ");
+const signedMoney = n => (n > 0 ? "+" : "\u2212") + money(Math.abs(n));
+const FILTERS = [["all", "All"], ["critical", "Critical path"], ["chronic", "Chronic drift"],
+  ["OWN", "Owner (OWN)"], ["CTR", "Contractor (CTR)"], ["EXT", "External (EXT)"]];
+let toastTimer = 0;
+
+function toast(msg) {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("on"), 3200);
+}
+
+function passes(r) {
+  if (state.phase && r.m.phase !== state.phase) return false;
+  switch (state.filter) {
+    case "all": return true;
+    case "critical": return r.m.critical;
+    case "chronic": return r.chronic;
+    default: return r.m.family === state.filter;
+  }
+}
+
+function monthTicks(a, b, max) {
+  const s = new Date(a * DAY), all = [];
+  let y = s.getUTCFullYear(), m = s.getUTCMonth();
+  for (;;) {
+    const d = Date.UTC(y, m, 1) / DAY;
+    if (d > b) break;
+    if (d >= a) all.push(d);
+    m++;
+  }
+  const step = Math.max(1, Math.ceil(all.length / max));
+  return all.filter((_, i) => i % step === 0);
+}
+
+/* ---------- dataset lifecycle ---------- */
+function loadDataset(ds, note) {
+  stopPlay();
+  closeDrawer(true);
+  Object.assign(state, {ds, t: ds.reviewDates.length - 1, base: "prev", filter: "all", phase: "",
+    hover: null, pinned: null});
+  const n = lastT();
+  const slider = $("#tSlider");
+  slider.max = n;
+  slider.value = n;
+  const ticks = $("#ticks");
+  ticks.style.height = "14px";
+  ticks.innerHTML = ds.reviewDates.map((_, t) => (t % 2 === 0 || t === n)
+    ? `<span style="position:absolute;left:calc(8px + (100% - 16px) * ${n ? t / n : 0});transform:translateX(-50%)">${label(t)}</span>` : "").join("");
+  $("#baseSel").innerHTML = `<option value="prev">Previous period</option>` +
+      ds.reviewDates.map((d, t) => `<option value="${t}">${label(t)} · ${fmtDate(d)}</option>`).join("");
+  $("#chips").innerHTML = FILTERS.map(([f, name]) =>
+    `<button type="button" class="chip${f === "all" ? " on" : ""}" data-f="${f}" aria-pressed="${f === "all"}">${name}</button>`).join("");
+  $("#phaseSel").innerHTML = `<option value="">All phases</option>` + ds.phases.map(p => `<option>${esc(p)}</option>`).join("");
+  $("#projName").textContent = `${ds.name}${ds.sector ? " · " + ds.sector : ""} · SteerCo ${fmtDate(ds.steerco)}`;
+  $("#srcNote").textContent = `${ds.milestones.length} milestones · ${ds.reviewDates.length} reviews · ` +
+    `${ds.delays.length} delay log entries · ${ds.source}`;
+  render();
+  if (note) toast(note);
+}
+
+function render() {
+  const ds = state.ds, t = state.t, b = baseIndex();
+  const snap = snapshot(ds, t), base = snapshot(ds, b);
+  state.snap = snap;
+  $("#tSlider").value = t;
+  $("#tLabel").textContent = label(t);
+  $("#tDate").textContent = "Review " + fmtDate(ds.reviewDates[t]);
+  renderKpis(snap, base, b);
+  renderMta(snap);
+  renderResp(snap);
+  renderDecisions(snap);
+  renderGantt(snap, base, b);
+  if (state.drawer) renderDrawer();
+  applySpot();
+  pbTween(state.pbK || 0);
+}
+
+/* ---------- KPI cards with period-diff badges ---------- */
+function delta(diff, b, worseWhenUp, fmt = signed, unit = "") {
+  if (b === state.t) return `<span class="delta">base period</span>`;
+  if (!diff) return `<span class="delta">\u00b10${unit} vs ${label(b)}</span>`;
+  const cls = worseWhenUp == null ? "" : ((worseWhenUp ? diff > 0 : diff < 0) ? "worse" : "better");
+  return `<span class="delta ${cls}">${fmt(diff)}${unit} vs ${label(b)}</span>`;
+}
+
+function renderKpis(snap, base, b) {
+  const k = snap.k, kb = base.k;
+  const done = snap.rows.filter(r => r.s.done).length, doneB = base.rows.filter(r => r.s.done).length;
+  const critIds = snap.rows.filter(r => r.m.critical && r.s.net > 0 && !r.s.done).map(r => r.m.id);
+  const chronIds = snap.rows.filter(r => r.chronic).map(r => r.m.id);
+  const list = ids => ids.length ? ids.slice(0, 5).join(", ") + (ids.length > 5 ? ` +${ids.length - 5}` : "") : "none";
+  const cards = [
+    ["var(--blue)", "Tracked milestones", k.tracked, delta(done - doneB, b, false, signed, " done"),
+      `${done} completed · ${k.tracked - done} open`],
+    ["var(--red)", "Critical path slips", k.critical, delta(k.critical - kb.critical, b, true), list(critIds)],
+    ["var(--amber)", "Chronic drift", k.chronic, delta(k.chronic - kb.chronic, b, true),
+      `≥3 consecutive slips · ${list(chronIds)}`],
+    isClient()
+      ? ["var(--green)", "Excusable EOT entitlement", `${k.eot} d`, delta(k.eot - kb.eot, b, null, signed, " d"),
+        `${k.granted} d already approved · owner & external causes`]
+      : ["var(--violet)", "LD exposure (estimate)", money(k.ld), delta(k.ld - kb.ld, b, true, signedMoney),
+        "Contractor-caused critical net slip \u00d7 LD/day"],
+  ];
+  $("#kpis").innerHTML = cards.map(([c, h, v, d, s]) =>
+    `<div class="panel kpi" style="--k:${c}"><h3>${esc(h)}</h3><div class="v">${esc(v)}${d}</div><div class="sub">${esc(s)}</div></div>`).join("");
+}
+
+/* ---------- MTA focus-spotlight chart ---------- */
+function renderMta(snap) {
+  const ds = state.ds, svg = $("#mta"), rd = ds.reviewDates, t = state.t;
+  const W = Math.max(640, Math.round(($("#mtaWrap").clientWidth || 940) - 16));
+  const H = Math.round(Math.min(Math.max(W * 0.5, 380), 560));
+  const M = {l: 82, r: 64, t: 22, b: 58};
+  const pw = W - M.l - M.r, ph = H - M.t - M.b;
+  const singleDate = rd.length === 1;
+  const x0 = rd[0] - (singleDate ? 15 : 0), x1 = rd[rd.length - 1] + (singleDate ? 15 : 0);
+  // Y domain spans every period, so trajectories grow during playback without rescaling.
+  let lo = x0, hi = x1;
+  for (const m of ds.milestones) for (const v of m.traj) if (v != null) { if (v < lo) lo = v; if (v > hi) hi = v; }
+  const pad = Math.max(7, Math.round((hi - lo) * 0.04));
+  lo -= pad; hi += pad;
+  const X = v => f1(M.l + (v - x0) / ((x1 - x0) || 1) * pw);
+  const Y = v => f1(M.t + ph - (v - lo) / ((hi - lo) || 1) * ph);
+  let h = `<defs><filter id="slGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.4" result="b"/>` +
+    `<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>` +
+    `<clipPath id="slPlot"><rect x="${M.l}" y="${M.t}" width="${pw}" height="${ph}"/></clipPath></defs>`;
+  for (const v of monthTicks(lo, hi, Math.max(4, Math.floor(ph / 42))))
+    h += `<line class="gridline" x1="${M.l}" x2="${M.l + pw}" y1="${Y(v)}" y2="${Y(v)}"/>` +
+      `<text x="${M.l - 10}" y="${Y(v) + 4}" text-anchor="end">${fmtMon(v)}</text>`;
+  rd.forEach((v, i) => {
+    h += `<line class="gridline" x1="${X(v)}" x2="${X(v)}" y1="${M.t}" y2="${M.t + ph}"/>`;
+    if (pw > 640 || i % 2 === 0 || i === rd.length - 1)
+      h += `<text x="${X(v)}" y="${M.t + ph + 17}" text-anchor="middle">${label(i)}</text>` +
+        `<text x="${X(v)}" y="${M.t + ph + 31}" text-anchor="middle" style="font-size:9.5px">${singleDate ? fmtDate(v) : fmtMon(v)}</text>`;
+  });
+  h += `<line class="axisline" x1="${M.l}" x2="${M.l}" y1="${M.t}" y2="${M.t + ph}"/>` +
+    `<line class="axisline" x1="${M.l}" x2="${M.l + pw}" y1="${M.t + ph}" y2="${M.t + ph}"/>` +
+    `<text x="${M.l + pw / 2}" y="${H - 6}" text-anchor="middle">Review period</text>` +
+    `<text transform="translate(18 ${M.t + ph / 2}) rotate(-90)" text-anchor="middle">Forecast completion</text>`;
+  const a = Math.max(x0, lo), z = Math.min(x1, hi);
+  if (z > a)
+    h += `<line class="diag" x1="${X(a)}" y1="${Y(a)}" x2="${X(z)}" y2="${Y(z)}" clip-path="url(#slPlot)"/>` +
+      `<text x="${X(z) - 8}" y="${Y(z) + 18}" text-anchor="end" style="font-size:10px">Y = X · finished</text>`;
+  const tn = t < lastT() ? t + 1 : t;  // next period for the visual playhead; never past the last review
+  h += `<line class="nowline" x1="${X(rd[t])}" x2="${X(rd[t])}" y1="${M.t}" y2="${M.t + ph}"/>` +
+    `<text class="nowtag" x="${X(rd[t])}" y="${M.t - 7}" text-anchor="middle" style="fill:var(--accent);font-weight:600">${label(t)}</text>`;
+
+  const visible = snap.rows.filter(passes);
+  const ends = [];
+  let lines = "";
+  for (const r of visible) {
+    const m = r.m;
+    const col = r.s.gross > 0 ? (FAMILY_COLOUR[m.family] || "var(--muted)") : "var(--muted)";
+    let d = "", pen = false, last = null, dots = "";
+    for (let p = 0; p <= t; p++) {
+      const v = m.traj[p];
+      if (v == null) { pen = false; continue; }
+      const px = X(rd[p]), py = Y(v), prev = p > 0 ? m.traj[p - 1] : null;
+      d += (pen ? "L" : "M") + px + " " + py;
+      pen = true;
+      last = {px, py};
+      const turn = p === 0 || prev == null || v !== prev;
+      dots += `<circle cx="${px}" cy="${py}" r="${turn ? (m.critical ? 3.6 : 3) : 1.8}" fill="${col}" data-p="${p}"/>`;
+    }
+    if (!d) continue;
+    // Tail toward t+1 only when both snapshots exist and the milestone is open: no bridging blanks, no extending finished lines.
+    const nv = tn > t && !r.s.done && m.traj[t] != null ? m.traj[tn] : null;
+    const nx = nv != null ? X(rd[tn]) : last.px, ny = nv != null ? Y(nv) : last.py;
+    const tail = nv != null
+      ? `<line class="tl" x1="${last.px}" y1="${last.py}" x2="${last.px}" y2="${last.py}" stroke="${col}" data-x0="${last.px}" data-y0="${last.py}" data-x1="${nx}" data-y1="${ny}"/>` : "";
+    lines += `<g class="traj${m.critical ? " crit" : ""}" data-id="${esc(m.id)}"><path class="hit" d="${d}"/>` +
+      `<path class="ln" d="${d}" stroke="${col}"/>${tail}${dots}</g>`;
+    ends.push({id: m.id, col, x: last.px, y: last.py, w: Math.max(28, Math.round(m.id.length * 6.6 + 10)),
+      dx: f1(nx - last.px), dy: f1(ny - last.py)});
+  }
+  // End badges: scan left-to-right, push down on collision, wrap to a new column at the bottom.
+  const BH = 15, placed = [];
+  let tags = "";
+  ends.sort((p, q) => p.x - q.x || p.y - q.y);
+  for (const e of ends) {
+    let bx = Math.min(e.x + 8, W - e.w - 4);
+    let by = Math.max(M.t, Math.min(e.y - BH / 2, M.t + ph - BH));
+    for (let guard = 0; guard < 80; guard++) {
+      const hit = placed.find(q => bx < q.x + q.w + 2 && q.x < bx + e.w + 2 && Math.abs(q.y - by) < BH + 1);
+      if (!hit) break;
+      by = hit.y + BH + 1;
+      if (by > M.t + ph - BH) { by = M.t; bx = Math.min(bx + e.w + 2, W - e.w - 2); }
+    }
+    placed.push({x: bx, y: by, w: e.w});
+    const leader = Math.abs(by + BH / 2 - e.y) > 3
+      ? `<line x1="${e.x}" y1="${e.y}" x2="${bx}" y2="${f1(by + BH / 2)}" stroke="${e.col}" stroke-width="1" opacity=".6"/>` : "";
+    tags += `<g class="traj badge" data-id="${esc(e.id)}"${e.dx || e.dy ? ` data-dx="${e.dx}" data-dy="${e.dy}"` : ""}>${leader}<rect x="${bx}" y="${f1(by)}" width="${e.w}" height="${BH}" rx="4" fill="${e.col}"/>` +
+      `<text x="${f1(bx + e.w / 2)}" y="${f1(by + 11)}" text-anchor="middle">${esc(e.id)}</text></g>`;
+  }
+  if (!visible.length)
+    h += `<text x="${M.l + pw / 2}" y="${M.t + ph / 2}" text-anchor="middle" style="font-size:13px">No milestones match this filter</text>`;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = h + `<g class="lines">${lines}</g><g class="tags">${tags}</g>`;
+  // Cache tween targets once per integer period; pbTween only touches these attributes per frame.
+  const tw = pbCache(), nl = svg.querySelector(".nowline");
+  tw.now = nl ? {line: nl, text: svg.querySelector(".nowtag"), x0: X(rd[t]), x1: X(rd[tn])} : null;
+  tw.tails = [...svg.querySelectorAll("line.tl")].map(el => ({el,
+    x0: +el.dataset.x0, y0: +el.dataset.y0, x1: +el.dataset.x1, y1: +el.dataset.y1}));
+  tw.badges = [...svg.querySelectorAll(".badge[data-dx]")].map(el => ({el, dx: +el.dataset.dx, dy: +el.dataset.dy}));
+  $("#mtaSub").textContent = ` ${visible.length}/${snap.rows.length} trajectories · up to ${label(t)}`;
+}
+
+function applySpot() {
+  const hot = state.pinned || state.hover, svg = $("#mta");
+  svg.classList.toggle("spot", !!hot);
+  svg.querySelectorAll(".traj").forEach(g => {
+    const on = g.dataset.id === hot;
+    g.classList.toggle("hot", on);
+    if (on && !g.classList.contains("badge")) g.parentNode.appendChild(g);  // lift above siblings
+  });
+  document.querySelectorAll(".grow").forEach(r => r.classList.toggle("hot", r.dataset.id === hot));
+}
+
+function hideTip() { $("#tip").hidden = true; }
+
+function showTip(ev) {
+  const g = ev.target.closest(".traj");
+  if (!g || g.classList.contains("badge")) { hideTip(); return; }
+  const ds = state.ds, m = byId(g.dataset.id);
+  if (!m) return;
+  const svg = $("#mta"), rect = svg.getBoundingClientRect(), sx = svg.viewBox.baseVal.width / rect.width;
+  const cx = (ev.clientX - rect.left) * sx;
+  let best = null;
+  g.querySelectorAll("circle").forEach(c => {
+    const dx = Math.abs(Number(c.getAttribute("cx")) - cx);
+    if (!best || dx < best.dx) best = {dx, p: Number(c.dataset.p)};
+  });
+  if (!best) return;
+  const rd = ds.reviewDates, p = best.p, v = m.traj[p], prev = p > 0 ? m.traj[p - 1] : null;
+  const from = p > 0 ? rd[p - 1] : -Infinity;
+  const events = ds.delays.filter(d => d.ms === m.id && d.date != null && d.date > from && d.date <= rd[p]);
+  const reason = ds.reasonMap[m.reason];
+  const closed = m.actual != null && v === m.actual && rd[p] >= m.actual;
+  const tip = $("#tip");
+  tip.innerHTML = `<b>${esc(m.id)} · ${esc(m.name)}</b>` +
+    `<div class="row"><span>${label(p)} review</span><span>${fmtDate(rd[p])}</span></div>` +
+    `<div class="row"><span>${closed ? "Actual finish" : "Forecast"}</span><span>${fmtDate(v)}</span></div>` +
+    `<div class="row"><span>Change vs previous</span><span>${prev == null ? "first snapshot" : signed(v - prev) + " d"}</span></div>` +
+    `<div class="row"><span>Cause</span><span>${esc(m.reason || "\u2014")}${m.family ? " · " + m.family : ""}</span></div>` +
+    (reason ? `<p>${esc(reason.desc)} · ${esc(reason.excuse)}</p>` : "") +
+    events.map(d => `<p>${esc(d.id)} (${fmtDate(d.date)}): ${esc(d.summary)}, ${d.days} d, ${esc(d.status)}</p>`).join("");
+  tip.hidden = false;
+  const wr = $("#mtaWrap").getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = ev.clientX - wr.left + 16, y = ev.clientY - wr.top + 12;
+  if (x + tw > wr.width - 4) x = ev.clientX - wr.left - tw - 16;
+  if (y + th > wr.height - 4) y = wr.height - th - 4;
+  tip.style.left = Math.max(4, x) + "px";
+  tip.style.top = Math.max(4, y) + "px";
+}
+
+/* ---------- responsibility split ---------- */
+function renderResp(snap) {
+  const groups = [["OWN", PARTY.OWN, "var(--blue)"], ["CTR", PARTY.CTR, "var(--red)"],
+    ["EXT", PARTY.EXT, "var(--amber)"], ["", "Unassigned", "var(--muted)"]].map(([f, name, c]) => {
+    const rs = snap.rows.filter(r => r.m.family === f && r.s.gross > 0);
+    return {f, name, c, n: rs.length, open: rs.filter(r => !r.s.done).length,
+      days: rs.reduce((a, r) => a + r.s.gross, 0), ld: rs.reduce((a, r) => a + r.ld, 0)};
+  }).filter(g => g.f || g.n);
+  const total = groups.reduce((a, g) => a + g.days, 0);
+  $("#respSub").textContent = ` share of gross slip days at ${label(state.t)}`;
+  if (!total) { $("#resp").innerHTML = `<p class="empty">No slippage recorded at ${label(state.t)}.</p>`; return; }
+  const R = 50, C = 2 * Math.PI * R;
+  let off = 0, arcs = "";
+  for (const g of groups) {
+    if (!g.days) continue;
+    const len = g.days / total * C;
+    arcs += `<circle r="${R}" cx="70" cy="70" fill="none" stroke="${g.c}" stroke-width="18" ` +
+      `stroke-dasharray="${f1(len)} ${f1(C - len)}" stroke-dashoffset="${f1(-off)}" transform="rotate(-90 70 70)"/>`;
+    off += len;
+  }
+  const donut = `<svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="Responsibility split">` +
+    `<circle r="${R}" cx="70" cy="70" fill="none" stroke="var(--chip)" stroke-width="18"/>${arcs}` +
+    `<text x="70" y="70" text-anchor="middle" style="font:700 20px var(--mono);fill:var(--text)">${total}</text>` +
+    `<text x="70" y="88" text-anchor="middle" style="font-size:10px">slip days</text></svg>`;
+  const legend = groups.map(g => `<div class="lg" style="--c:${g.c}"><i></i><span>${esc(g.name)}</span>` +
+    `<b>${Math.round(g.days / total * 100)}%</b><small>${g.n} milestones · ${g.open} open · ${g.days} d` +
+    (g.ld ? `<span class="internal-only"> · LD ${money(g.ld)}</span>` : "") + `</small></div>`).join("");
+  $("#resp").innerHTML = `<div class="resp-body">${donut}<div class="legend-list">${legend}</div></div>`;
+}
+
+/* ---------- top 3 open decisions ---------- */
+function renderDecisions(snap) {
+  const top = decisions(snap), client = isClient();
+  if (!top.length) {
+    $("#dec").innerHTML = `<p class="empty">No open net slip at ${label(state.t)}. Nothing to escalate.</p>`;
+    return;
+  }
+  $("#dec").innerHTML = `<div class="wrap"><table><thead><tr><th>#</th><th>Milestone / decision ask</th>` +
+    `<th class="num">Net slip</th><th class="num">${client ? "EOT approved" : "LD at risk"}</th></tr></thead><tbody>` +
+    top.map((r, i) => `<tr class="click" data-id="${esc(r.m.id)}"><td><span class="rank">${i + 1}</span></td>` +
+      `<td><b>${esc(r.m.id)}</b> ${esc(r.m.name)}<br><small style="color:var(--muted)">${esc(r.m.action || "Decision ask not recorded")}</small></td>` +
+      `<td class="num">${signed(r.s.net)} d<br><span class="pill ${r.rag}">${ragText(r.rag)}</span></td>` +
+      `<td class="num">${client ? `${r.m.approved - r.m.baseline} d`
+        : `${r.ld ? money(r.ld) : "\u2014"}<br><small style="color:var(--muted)">${money(r.m.ldRate)}/d</small>`}</td></tr>`).join("") +
+    `</tbody></table></div>`;
+}
+
+/* ---------- dual-baseline deviation gantt ---------- */
+// Sample switches replace datasets. Full-history domains stay stable across periods and filters.
+const ganttDomains = new WeakMap();
+function ganttDomain(ds) {
+  let domain = ganttDomains.get(ds);
+  if (domain) return domain;
+  let lo = Infinity, hi = -Infinity;
+  const include = v => {
+    if (Number.isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  };
+  ds.reviewDates.forEach(include);
+  for (const m of ds.milestones) {
+    [m.baseline, m.approved, m.forecast, m.actual].forEach(include);
+    m.traj.forEach(include);
+  }
+  if (!Number.isFinite(lo)) { lo = 0; hi = 1; }
+  const span = Math.max(hi - lo, 1);
+  domain = {lo: lo - 10, hi: hi + 10 + span * 0.14};
+  ganttDomains.set(ds, domain);
+  return domain;
+}
+function renderGantt(snap, base, b) {
+  const ds = state.ds, t = state.t, client = isClient(), rows = snap.rows.filter(passes);
+  $("#ganttSub").textContent = ` ${rows.length} milestones · forecast at ${label(t)} · ` +
+    `Δ vs ${label(b)}`;
+  pbCache().marks = [];
+  if (!rows.length) { $("#gantt").innerHTML = `<p class="empty">No milestones match this filter.</p>`; return; }
+  const now = ds.reviewDates[t];
+  const {lo, hi} = ganttDomain(ds);
+  const P = v => f1((v - lo) / (hi - lo) * 100) + "%";
+  const Wd = (a, z) => f1((z - a) / (hi - lo) * 100) + "%";
+  const Pn = v => Math.min(100, Math.max(0, f1((v - lo) / (hi - lo) * 100)));
+  const tn = t < lastT() ? t + 1 : t;
+  // Forecast marker glides to t+1 only when both snapshots exist and the milestone is still open.
+  const fcTw = (m, s) => (tn === t || s.done || m.traj[t] == null || m.traj[tn] == null) ? ""
+    : ` data-a="${Pn(s.forecast)}" data-b="${Pn(m.traj[tn])}"`;
+  const axis = monthTicks(lo, hi, 10).map(v => `<span style="left:${P(v)}">${fmtMon(v)}</span>`).join("");
+  const body = rows.map(r => {
+    const m = r.m, s = r.s, sb = base.rows[m.idx].s;
+    let bars = "";
+    if (m.approved > m.baseline)
+      bars += `<span class="bar eot" style="left:${P(m.baseline)};width:${Wd(m.baseline, m.approved)}" title="Excused EOT ${m.approved - m.baseline} d"></span>`;
+    // Keep both spans in the DOM so interpolation can cross the approved baseline.
+    bars += `<span class="bar net" data-base="${Pn(m.approved)}" style="transition:none;left:${P(m.approved)};width:${Wd(m.approved, Math.max(m.approved, s.forecast))}" title="Net slip at review: ${Math.max(s.net, 0)} d"></span>`;
+    bars += `<span class="bar early" style="transition:none;left:${P(Math.min(s.forecast, m.approved))};width:${Wd(Math.min(s.forecast, m.approved), m.approved)}" title="Ahead at review: ${Math.max(-s.net, 0)} d"></span>`;
+    const marks = `<span class="mk" style="left:${P(m.baseline)}" title="Original baseline ${fmtDate(m.baseline)}"></span>` +
+      (m.approved !== m.baseline ? `<span class="mk appr" style="left:${P(m.approved)}" title="Approved EOT baseline ${fmtDate(m.approved)}"></span>` : "") +
+      `<span class="mk fc${s.done ? " done" : ""}" style="left:${P(s.forecast)}"${fcTw(m, s)} title="${s.done ? "Completed" : "Forecast"} ${fmtDate(s.forecast)}"></span>`;
+    const dn = s.net - sb.net;
+    const text = client ? `EOT +${m.approved - m.baseline} d · net ${signed(s.net)} d`
+      : `${signed(s.net)} d net${dn && b !== t ? ` (${signed(dn)} vs ${label(b)})` : ""}`;
+    const colour = s.net > 0 ? "var(--red)" : "var(--green)";
+    return `<div class="grow" data-id="${esc(m.id)}"><div class="glab" title="${esc(m.id + " " + m.name)}"><b>${esc(m.id)}</b>${esc(m.name)}` +
+      (m.critical ? ` <span class="fam" style="color:var(--red)" title="Critical path">CP</span>` : "") + `</div>` +
+      `<div class="glane"><span class="gnow" style="left:${P(now)}"></span>${bars}${marks}` +
+      `<span class="gval" style="left:${P(Math.max(m.baseline, m.approved, s.forecast))};color:${colour}">${text}</span></div></div>`;
+  }).join("");
+  $("#gantt").innerHTML = `<div class="gaxis">${axis}</div>${body}`;
+  pbCache().marks = [...$("#gantt").querySelectorAll(".mk.fc[data-b]")].map(el => {
+    const lane = el.parentElement;
+    const net = lane.querySelector(".bar.net"), early = lane.querySelector(".bar.early");
+    return {el, a: +el.dataset.a, b: +el.dataset.b, net, early, approved: +net.dataset.base};
+  });
+}
+
+/* ---------- read-only milestone inspector ---------- */
+function openDrawer(id) {
+  if (!byId(id)) return;
+  hideTip();
+  Object.assign(state, {drawer: id, pinned: id});
+  renderDrawer();
+  applySpot();
+  $("#drawer").classList.add("on");
+  $("#drawer").setAttribute("aria-hidden", "false");
+  $("#scrim").classList.add("on");
+  $("#dClose").focus({preventScroll: true});
+}
+
+function closeDrawer(silent) {
+  state.drawer = null;
+  state.pinned = null;
+  $("#drawer").classList.remove("on");
+  $("#drawer").setAttribute("aria-hidden", "true");
+  $("#scrim").classList.remove("on");
+  if (!silent) applySpot();
+}
+
+function renderDrawer() {
+  const ds = state.ds, m = byId(state.drawer);
+  if (!m) { closeDrawer(true); return; }
+  const t = state.t, rd = ds.reviewDates, s = stateAt(ds, m, t), rag = ragOf(ds, m, s);
+  const reason = ds.reasonMap[m.reason];
+  $("#dMeta").textContent = `${m.id} · ${m.phase} · ${m.owner || "No owner"}`;
+  $("#dTitle").textContent = m.name;
+  const hist = rd.map((rv, p) => {
+    const v = m.traj[p], pv = p > 0 ? m.traj[p - 1] : null;
+    const ch = v != null && pv != null ? v - pv : null;
+    return `<tr class="${p === t ? "cur" : ""}"><td>${label(p)}</td><td>${fmtDate(rv)}</td>` +
+      `<td>${v == null ? `<span style="color:var(--muted)">closed</span>` : fmtDate(v)}</td>` +
+      `<td class="num">${ch == null ? "" : ch ? signed(ch) : "0"}</td>` +
+      `<td class="num">${v == null ? "" : streakAt(m, p)}</td></tr>`;
+  }).join("");
+  const logs = ds.delays.filter(d => d.ms === m.id);
+  const logHtml = logs.length
+    ? `<div class="mini"><table><thead><tr><th>Event</th><th>Notice</th><th>Cause</th><th class="num">Days</th><th>State</th></tr></thead><tbody>` +
+      logs.map(d => `<tr><td><b>${esc(d.id)}</b><br><small>${esc(d.summary)}</small></td><td>${fmtDate(d.date)}</td>` +
+        `<td>${esc(d.reason)}</td><td class="num">${d.days}</td><td>${esc(d.status)}</td></tr>`).join("") + `</tbody></table></div>`
+    : `<p class="note">No Delay_Log entry references ${esc(m.id)}.</p>`;
+  $("#dBody").innerHTML =
+    `<section><div class="tri">` +
+      `<div><small>Original baseline</small><b>${fmtDate(m.baseline)}</b><em>contract date</em></div>` +
+      `<div><small>Approved EOT</small><b>${fmtDate(m.approved)}</b><em>+${m.approved - m.baseline} d excused</em></div>` +
+      `<div><small>${s.done ? "Actual finish" : "Forecast " + label(t)}</small><b>${fmtDate(s.forecast)}</b><em>net ${signed(s.net)} d</em></div>` +
+    `</div></section>` +
+    `<section class="legend"><span class="pill ${rag}">${ragText(rag)}</span>` +
+      `<span class="fam ${esc(m.family)}">${esc(m.family || "n/a")}</span>` +
+      `<span>${m.critical ? "Critical path" : "Non-critical"}</span>` +
+      `<span>${esc(m.reason || "No reason code")}${reason ? " · " + esc(reason.desc) : ""}</span>` +
+      `<span>${esc(m.party)}</span></section>` +
+    `<section><p class="h4">${label(0) + "–" + label(lastT()) + " forecast history"}</p><div class="mini"><table><thead><tr><th>Period</th><th>Review</th>` +
+      `<th>Forecast</th><th class="num">\u0394 d</th><th class="num">Streak</th></tr></thead><tbody>${hist}</tbody></table></div></section>` +
+    `<section><p class="h4">Delay log</p>${logHtml}</section>` +
+    `<section><p class="h4">Recovery action</p><p class="note">${esc(m.action || "Not recorded")}</p></section>`;
+}
+
+
+/* ---------- playback: one requestAnimationFrame loop ----------
+   state.t is the integer business period; KPI, RAG, decisions and drawer only change when it steps.
+   state.pbK in [0,1) is the visual playhead between t and t+1; it only moves SVG/CSS attributes.
+   (state.phase is the phase filter, not the playhead.) */
+const PB_MS = 1100;  // one period at 1x, divided by state.speed
+const PB_RM = matchMedia("(prefers-reduced-motion: reduce)");
+const pbLerp = (a, z, k) => f1(a + (z - a) * k);
+const pbCache = () => state.tw || (state.tw = {now: null, tails: [], badges: [], marks: []});
+
+// Per-frame update: attributes on nodes cached by renderMta/renderGantt, never innerHTML.
+function pbTween(k) {
+  const tw = pbCache();
+  if (PB_RM.matches) k = 0;
+  if (state.ds) {
+    const transitioning = k > 0 && state.t < lastT();
+    const playbackNote = transitioning
+      ? `Animated transition ${label(state.t)} → ${label(state.t + 1)}; values at ${label(state.t)}`
+      : "Review " + fmtDate(state.ds.reviewDates[state.t]);
+    const dateLabel = $("#tDate");
+    if (dateLabel.textContent !== playbackNote) dateLabel.textContent = playbackNote;
+  }
+  if (tw.now) {
+    const x = pbLerp(tw.now.x0, tw.now.x1, k);
+    tw.now.line.setAttribute("x1", x);
+    tw.now.line.setAttribute("x2", x);
+    if (tw.now.text) tw.now.text.setAttribute("x", x);
+  }
+  for (const e of tw.tails) {
+    e.el.setAttribute("x2", pbLerp(e.x0, e.x1, k));
+    e.el.setAttribute("y2", pbLerp(e.y0, e.y1, k));
+  }
+  for (const e of tw.badges) {
+    if (k) e.el.setAttribute("transform", `translate(${f1(e.dx * k)} ${f1(e.dy * k)})`);
+    else e.el.removeAttribute("transform");
+  }
+  for (const e of tw.marks) {
+    const x = pbLerp(e.a, e.b, k);
+    e.el.style.left = x + "%";
+    if (e.net && e.early) {
+      e.net.style.left = e.approved + "%";
+      e.net.style.width = Math.max(0, x - e.approved) + "%";
+      e.early.style.left = Math.min(x, e.approved) + "%";
+      e.early.style.width = Math.max(0, e.approved - x) + "%";
+    }
+  }
+}
+
+function pbFrame(now) {
+  state.raf = 0;
+  if (!state.playing) return;
+  const dt = state.pbLast ? Math.min(now - state.pbLast, 200) : 0;
+  state.pbLast = now;
+  state.pbK = (state.pbK || 0) + dt * state.speed / PB_MS;
+  if (state.pbK >= 1) {
+    if (state.t >= lastT()) { stopPlay(); return; }
+    state.pbK = Math.min(state.pbK - 1, 0.999);
+    state.t++;
+    render();
+    if (state.t >= lastT()) { stopPlay(); return; }
+  }
+  pbTween(state.pbK);
+  state.raf = requestAnimationFrame(pbFrame);
+}
+
+function startPlay() {
+  if (state.playing || lastT() < 1) return;
+  if (state.t >= lastT()) {
+    state.t = 0;
+    state.pbK = 0;
+  }
+  state.playing = true;
+  state.pbLast = 0;
+  const b = $("#playBtn");
+  b.innerHTML = "&#10074;&#10074;";
+  b.setAttribute("aria-label", "Pause time-lapse");
+  render();
+  pbTween(state.pbK);
+  if (!state.raf) state.raf = requestAnimationFrame(pbFrame);
+}
+
+// Manual pause preserves the fractional playhead and the visible geometry.
+function pausePlay() {
+  state.playing = false;
+  if (state.raf) cancelAnimationFrame(state.raf);
+  state.raf = 0;
+  state.pbLast = 0;
+  const b = $("#playBtn");
+  b.innerHTML = "&#9654;";
+  b.setAttribute("aria-label", "Play time-lapse");
+}
+
+// Navigation and reporting explicitly return to an actual review period.
+function stopPlay() {
+  pausePlay();
+  state.pbK = 0;
+  pbTween(0);
+}
+
+/* ---------- view & skin ---------- */
+function setView(v) {
+  state.view = v;
+  document.body.classList.toggle("client", v === "CLIENT");
+  document.querySelectorAll("[data-view]").forEach(b => b.classList.toggle("on", b.dataset.view === v));
+  render();
+}
+
+function setTheme(th) {
+  state.theme = th;
+  document.documentElement.dataset.theme = th;
+  $("#themeBtn").textContent = th === "dark" ? "Paper skin" : "Graphite skin";
+}
+
+function boot() {
+  $("#demoSel").addEventListener("change", e => {
+    const v = e.target.value;
+    if (!Object.prototype.hasOwnProperty.call(DEMOS, v)) return;
+    loadDataset(DEMOS[v](), `Demo ${v} loaded`);
+  });
+  document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+  $("#themeBtn").addEventListener("click", () => setTheme(state.theme === "dark" ? "light" : "dark"));
+  $("#playBtn").addEventListener("click", () => state.playing ? pausePlay() : startPlay());
+  $("#speedBtn").addEventListener("click", () => {
+    state.speed = state.speed === 1 ? 2 : 1;
+    $("#speedBtn").textContent = state.speed + "x";
+    // The rAF loop reads state.speed every frame, so the current period keeps its progress.
+  });
+  $("#tSlider").addEventListener("input", e => { stopPlay(); state.t = Number(e.target.value); render(); });
+  $("#baseSel").addEventListener("change", e => { state.base = e.target.value; render(); });
+  $("#chips").addEventListener("click", e => {
+    const b = e.target.closest("[data-f]");
+    if (!b) return;
+    state.filter = b.dataset.f;
+    $("#chips").querySelectorAll("[data-f]").forEach(c => {
+      c.classList.toggle("on", c === b);
+      c.setAttribute("aria-pressed", String(c === b));
+    });
+    render();
+  });
+  $("#phaseSel").addEventListener("change", e => { state.phase = e.target.value; render(); });
+
+  const svg = $("#mta");
+  const hoverTo = id => { if (id !== state.hover) { state.hover = id; applySpot(); } };
+  svg.addEventListener("pointerover", e => { const g = e.target.closest(".traj"); hoverTo(g ? g.dataset.id : null); });
+  svg.addEventListener("pointermove", showTip);
+  svg.addEventListener("pointerleave", () => { hoverTo(null); hideTip(); });
+  svg.addEventListener("click", e => {
+    const g = e.target.closest(".traj");
+    if (g) openDrawer(g.dataset.id);
+    else if (state.pinned) { state.pinned = null; applySpot(); }
+  });
+  const pick = e => { const row = e.target.closest("[data-id]"); if (row) openDrawer(row.dataset.id); };
+  $("#dec").addEventListener("click", pick);
+  $("#gantt").addEventListener("click", pick);
+  $("#gantt").addEventListener("pointerover", e => { const row = e.target.closest(".grow"); hoverTo(row ? row.dataset.id : null); });
+  $("#gantt").addEventListener("pointerleave", () => hoverTo(null));
+  $("#dClose").addEventListener("click", () => closeDrawer());
+  $("#scrim").addEventListener("click", () => closeDrawer());
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      if (state.drawer) closeDrawer();
+      else if (state.pinned) { state.pinned = null; applySpot(); }
+      return;
+    }
+    if (e.target.closest("input,select,textarea,dialog")) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      stopPlay();
+      state.t = Math.min(lastT(), Math.max(0, state.t + (e.key === "ArrowRight" ? 1 : -1)));
+      render();
+    } else if (e.key === " " && !e.target.closest("button")) {
+      e.preventDefault();
+      state.playing ? pausePlay() : startPlay();
+    }
+  });
+  // Hidden tab and browser print (including Ctrl+P) stop playback on the current integer period.
+  document.addEventListener("visibilitychange", () => { if (document.hidden) stopPlay(); });
+  addEventListener("beforeprint", preparePrint);
+  let rz = 0;
+  addEventListener("resize", () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => { if (state.snap) { renderMta(state.snap); applySpot(); pbTween(state.pbK); } }, 120);
+  });
+  wireIO(); // Print and navigation prevention only; never reads dropped files.
+  loadDataset(DEMOS.A());
+}
+
+/* ---------- Sample-only demo: no file readers, parsers, mapper or CSV exporter ---------- */
+/* ---------- print ---------- */
+function preparePrint() {
+  if (!state.ds) return;
+  stopPlay();
+  closeDrawer(true);
+  hideTip();
+  applySpot();
+  const ds = state.ds, t = state.t;
+  $("#printHead").innerHTML = `<h1>SAMPLE DATA / DEMO — ${esc(ds.name)}</h1><p>${esc(ds.sector || "")} · ${label(t)} review ${fmtDate(ds.reviewDates[t])} · ` +
+    `${isClient() ? "Client-facing" : "Internal SteerCo"} view · printed ${new Date().toLocaleDateString("en-GB", {day: "2-digit", month: "short", year: "numeric"})} (local)</p>`;
+}
+
+function printReport() {
+  preparePrint();
+  window.print();
+}
+
+function wireIO() {
+  $("#printBtn").addEventListener("click", printReport);
+  addEventListener("dragover", e => { e.preventDefault(); });
+  addEventListener("drop", e => {
+    e.preventDefault();
+    toast("Sample data only — choose built-in Demo A or B.");
+  });
+}
+
+boot();
+})();
+</script>
+</body>
+</html>
